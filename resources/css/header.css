@@ -1,0 +1,279 @@
+.Header
+{
+	margin-top: -0.5rem;
+	margin-left: -0.5rem;
+	margin-right: -0.5rem;
+	position: relative;
+}
+/*Contenedor titulo*/
+.DivTit
+{
+	display: flex;
+    flex-wrap: wrap;
+	background-color:var(--green-color);
+	justify-content: space-between;
+	align-items: center;
+	margin: 0;
+}
+.DivTit .Title
+{
+	font-family: var(--title-font);
+	font-size: 3.75rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+/*Boton volver a paginacion*/
+.homeButton
+{
+	margin-left: 5.5rem;
+	height: 5.5rem;
+	width: 5.5rem;
+	background-color: #dddddd00;
+	border-color: #dddddd00;
+	transition: 0.25s;
+}
+.homeButton:hover img
+{
+	transition: 0.25s;
+    transform: scaleX(1.1) scaleY(1.1);
+}
+	/*Icono de perfil*/
+	#circle {
+		margin-right: 5.5rem;
+		background: rgb(0, 0, 0);
+		border-radius: 50%;
+		width: 7.5rem;
+		height: 7.5rem;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
+	#circle  div{
+		background: rgba(11, 92, 116);;
+		border-radius: 50%;
+		width: 6.875rem;
+		height: 6.875rem;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
+	#circle img{
+		width: 9.375rem;
+		height: 9.375rem;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		clip-path: circle(35%);
+	}
+
+	#circle div h1{
+	color: #ffffff;
+	}
+
+	/*Icono Centrado en editar usuario*/
+	#circleUs {
+		
+		background: rgb(0, 0, 0);
+		border-radius: 50%;
+		width: 7.5rem;
+		height: 7.5rem;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
+	#circleUs  div{
+		background: rgba(11, 92, 116);;
+		border-radius: 50%;
+		width: 6.875rem;
+		height: 6.875rem;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
+	#circleUs img{
+		width: 9.375rem;
+		height: 9.375rem;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		clip-path: circle(35%);
+	}
+
+	#circleUs div h1{
+	color: #ffffff;
+	}
+	.logOut
+	{
+		background-color: #00000000;
+		border-width: 0cm;
+		width: 10rem;
+		font-family: var(--title-font);
+		font-size: medium;
+	}
+/*Barra de navegació i desplegable*/
+.navbar {
+	display: flex;
+	overflow: hidden;
+	background-color: var(--green-color);
+	padding-left: 0.938rem;
+	padding-top: 0.938rem;
+	padding-bottom: 0.469rem;
+	justify-content: space-evenly;
+
+  }
+  
+  .navbar .navA {
+	border-radius: 0.625rem;
+	float: left;
+	font-size: 1rem;
+	color: white;
+	background-color: var(--dark-color);
+	text-align: center;
+	padding: 0.875rem 1rem;
+	text-decoration: none;
+  }
+  .navbar a {
+	float: left;
+	font-size: 1rem;
+	color: white;
+	text-align: center;
+	padding: 0.875rem 1rem;
+	text-decoration: none;
+  }
+  
+  .dropdown {
+	float: left;
+	overflow: hidden;
+  }
+  .dropdown .dropbtn {
+	border-radius: 0.625rem;
+	font-size: 1rem;  
+	border: none;
+	outline: none;
+	color: white;
+	padding: 0.875rem 1rem;
+	background-color: var(--dark-color);
+	font-family: inherit;
+	margin: 0;
+  }
+  .fontawesomesvg {width: 1em;
+	height: 1em;
+	vertical-align: -.125em;
+  }
+  .navbar a:hover, .dropdown:hover .dropbtn {
+	background-color: red;
+  }
+  
+  .dropdown-content {
+	/*display: none;*/
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 10rem;
+	box-shadow: 0rem 0.5rem 1rem 0rem rgba(0,0,0,0.2);
+	z-index: 1;
+	/*transition: 0.25s;*/
+    transform: scaleX(0) scaleY(0);
+  }
+  
+  .dropdown-content a {
+	float: none;
+	color: black;
+	padding: 0.75rem 1rem;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+  }
+  .dropdown-content input {
+	float: none;
+	color: black;
+	padding: 0.75rem 1rem;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+  }
+  
+  .dropdown-content a:hover {
+	background-color: #ddd;
+  }
+  .dropdown-content input:hover {
+	background-color: #ddd;
+  }
+  
+  .dropdown:hover .dropdown-content {
+	display: block;
+    transform: scaleX(1) scaleY(1);
+  }
+  .dropdown-content:focus-within{
+	display: block;
+    transform: scaleX(1) scaleY(1);
+  }
+
+/*BarraBusqueda*/
+.InputContainer {
+	height: 2.5rem;
+	width: 36.688rem;
+	display: flex;
+	align-items: center;
+	justify-content: left;
+	background-color: var(--dark-color);
+	border-radius: 4.17rem;
+	overflow: hidden;
+	cursor: pointer;
+	padding-left: 0.938rem;
+	box-shadow: 0.125rem 0.125rem 0.625rem rgba(0, 0, 0, 0.075);
+  }
+  
+  .input {
+	width: 106.25rem;
+	height: 100%;
+	border: none;
+	outline: none;
+	font-size: 0.9em;
+	caret-color: var(--background-color);
+	background-color: var(--dark-color);
+	color: var(--background-color);
+	color: #ddd;
+  }
+  
+  .labelforsearch {
+	cursor: text;
+	padding: 0rem 0.75rem;
+	color: var(--background-color);
+  }
+  
+  .searchIcon {
+	width: 0.813rem;
+  }
+  
+  .border {
+	height: 40%;
+	width: 0.081rem;
+	background-color: rgb(223, 223, 223);
+  }
+  
+  .micIcon {
+	width: 2rem;
+  }
+  
+  .micButton {
+	padding: 0rem 0.313rem 0rem 0.125rem;
+	border: none;
+	background-color: transparent;
+	height: 2.5rem;
+	cursor: pointer;
+	transition-duration: .3s;
+  }
+  
+  .searchIcon path {
+	fill: rgb(255, 255, 255);
+  }
+  
+  .micIcon path {
+	fill: rgb(255, 81, 0);
+  }
+  
+  .micButton:hover {
+	background-color: red;
+	transition-duration: .3s;
+  }

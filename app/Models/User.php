@@ -1,0 +1,125 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Services\PasswordService;
+
+class User extends Authenticatable
+{
+    use HasFactory;
+
+    protected $table = 'usuaris'; // Asegúrate de que la tabla es 'usuaris'
+
+    protected $primaryKey = 'Usuari'; // Ajusta si es diferente
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $fillable = ['Correu', 'Usuari', 'Contrasenya', 'Foto', 'tokenRec', 'Admin', 'google_id', 'github_id']; // Los campos correctos de la tabla
+    public $timestamps = true; // Si usas timestamps en la tabla
+
+    // Obtener todos los usuarios
+    public static function getAllUsers()
+    {
+        return self::all();
+    }
+
+    // Obtener un usuario por ID
+    public static function getUserById($id)
+    {
+        return self::find($id);
+    }
+
+    // Buscar un usuario por nombre (o nombre de usuario)
+    public static function testName($name)
+    {
+        return self::where("Usuari", "like", '%' . $name . '%')->get();
+    }
+
+    // Crear un nuevo usuario
+    public static function createUser($data)
+    {
+        return self::create([
+            'Correu' => $data['email'], // Usamos 'Correu' para el correo
+            'Usuari' => $data['name'],  // Usamos 'Usuari' para el nombre de usuario
+            'Contrasenya' => bcrypt($data['password']), // Usamos 'Contrasenya' para la contraseña cifrada
+        ]);
+    }
+
+    // Editar características del usuario (ej. cambiar nombre)
+    public static function updateUserName($id, $newName)
+    {
+        $user = self::find($id);
+        if ($user) {
+            $user->Usuari = $newName; // Usamos 'Usuari' para el nombre de usuario
+            $user->save();
+            return $user;
+        }
+        return null;
+    }
+
+    // Editar la foto del usuario
+    public static function updateFoto($id, $newFoto)
+    {
+        $user = self::find($id);
+        if ($user) {
+            $user->Foto = $newFoto; // Usamos 'Foto' para actualizar la foto
+            $user->save();
+            return $user;
+        }
+        return null;
+    }
+
+    // Editar la contraseña del usuario
+    public static function updatePassword($id, $newPassword)
+    {
+        $user = self::find($id);
+        if ($user) {
+            $hashedPassword = PasswordService::encrypt($newPassword);
+            $user->Contrasenya = $hashedPassword; // Usamos 'Contrasenya' para actualizar la contraseña
+            $user->save();
+            return $user;
+        }
+        return null;
+    }
+
+    // Eliminar un usuario por ID
+    public static function deleteUser($id)
+    {
+        return self::destroy($id);
+    }
+
+    // Método para obtener el nombre de usuario para la autenticación
+    public function getAuthIdentifierName()
+    {
+        return $this->primaryKey; // Ahora devolverá 'Usuari'
+    }
+
+    // Método para obtener la contraseña del usuario
+    public function getAuthIdentifier()
+    {
+        return $this->{$this->getAuthIdentifierName()};
+    }
+    
+    public function getAuthPassword()
+    {
+        return $this->Contrasenya;
+    }
+    
+    public function getRememberToken()
+    {
+        return $this->{$this->getRememberTokenName()};
+    }
+    
+    public function setRememberToken($value)
+    {
+        $this->{$this->getRememberTokenName()} = $value;
+    }
+    
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
+    }
+}
+
