@@ -5,6 +5,7 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Illuminate\Support\Facades\Auth;
 
 class loginIcon extends Component
 {
@@ -15,6 +16,14 @@ class loginIcon extends Component
     public $links;
     public function __construct($nameUs = "", $imgUs= "", $admin="false")
     {
+        // Si el usuario está autenticado, usar datos de la sesión
+        if (Auth::check()) {
+            $user = Auth::user();
+            $nameUs = $user->Usuari;
+            $imgUs = $user->Foto ?? "";
+            $admin = $user->Admin ? "true" : "false";
+        }
+        
         if($nameUs != "")
         {
             if($imgUs !="")
@@ -24,22 +33,23 @@ class loginIcon extends Component
             {
                 $circ = '<div><h1>'.substr($nameUs,0,1).'</h1></div>';
             }
-            $links = '<a href="projecte.test/vistaEdUsuari.php">Dades Usuari</a>
-            <form method = "POST" id="LoginForm" action='.htmlentities($_SERVER["PHP_SELF"]).'>
-                <input id="LogOut" type="submit" class="logOut" name="LogOut" value="LogOut">
-            </form>';
+            
+            // Usar URL absolutas para evitar problemas de redirección
+            $links = '<a href="/vistaEdUsuari.php">Dades Usuari</a>
+            <a href="/logout">Logout</a>';
+            
             if($admin == "true") 
             {
-                $links .= '<a href="/projecte.test/vistaAdmUsers.php">Administrar usuaris</a>';
+                $links .= '<a href="/vistaAdmUsers.php">Administrar usuaris</a>';
             }
         }else
         {
             $circ = '<img src="/images/noLogin.png" alt="">';
-            $links = "<a href=./login>Login</a> <a href=./register>Sign</a>'";
+            $links = '<a href="/login">Login</a> <a href="/register">Sign</a>';
         }
+        
         $this->circ = $circ;
         $this->links = $links;
-
     }
 
     /**

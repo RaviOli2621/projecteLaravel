@@ -107,19 +107,36 @@ class User extends Authenticatable
         return $this->Contrasenya;
     }
     
+    /**
+     * Get the remember token for the user.
+     *
+     * @return string|null
+     */
     public function getRememberToken()
     {
-        return $this->{$this->getRememberTokenName()};
+        // Return null since we don't have this column
+        return null;
     }
     
+    /**
+     * Set the remember token for the user.
+     *
+     * @param string $value
+     * @return void
+     */
     public function setRememberToken($value)
     {
-        $this->{$this->getRememberTokenName()} = $value;
+        // Do nothing since we don't have remember_token column
     }
     
+    /**
+     * Get the column name for the "remember me" token.
+     *
+     * @return string
+     */
     public function getRememberTokenName()
     {
-        return 'remember_token';
+        return 'remember_token'; // Keep default name but the methods above will handle missing column
     }
 }
 

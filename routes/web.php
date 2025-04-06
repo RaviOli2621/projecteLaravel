@@ -15,6 +15,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/test', [UserController::class, 'test'])->name('test');
 // Ruta para cerrar sesión
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/register', function () {
@@ -27,4 +28,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/dashboard', function () {
     return "Bienvenido al dashboard";
 })->middleware('auth'); // Ruta protegida por autenticación
+
+// Add this route to your web routes file
+Route::get('/debug-session', [App\Http\Controllers\SessionDebugController::class, 'debug'])->name('debug.session');
 ?>

@@ -25,14 +25,28 @@ class AuthController extends Controller
             'password' => 'required|string|min:1',
         ]);
     
-        // Buscar al usuario por correo electrónico (Asegúrate de que tu tabla es "usuaris" y los campos coinciden)
+        // Buscar al usuario por correo electrónico (usando la columna Correu)
         $user = User::where('Correu', $credentials['email'])->first();
+        
         if ($user && Hash::check($credentials['password'], $user->Contrasenya)) {
-            Auth::login($user);
-            $request->session()->regenerate();
-            $request->session()->save();
-
-            return redirect()->route('test'); 
+            // Guardar datos relevantes del usuario en la sesión
+            session([
+                'usuari' => $user->Usuari,  // Campo primario personalizado
+                'admin' => $user->Admin,
+                'email' => $user->Correu,
+                'name' => $user->Usuari,    // Nombre de usuario como campo primario
+            ]);
+            
+            // Realizar login sin usar "remember me"
+            Auth::login($user, false);
+            
+            // Migrar sesión preservando datos
+            $request->session()->migrate(true);
+            
+            // Guardar sesión explícitamente
+            session()->save();
+            
+            return redirect()->intended(route('home'));
         }
     
         return back()->withErrors([
@@ -50,7 +64,7 @@ class AuthController extends Controller
         // Regenerar el token CSRF
         $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Logout exitoso'], 200);
+        return redirect()->intended(route('home'));
     }
 
     // Función para crear un nuevo usuario
