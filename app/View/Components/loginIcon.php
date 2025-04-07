@@ -12,10 +12,14 @@ class loginIcon extends Component
     /**
      * Create a new component instance.
      */
+
     public $circ;
     public $links;
-    public function __construct($nameUs = "", $imgUs= "", $admin="false")
+    public function __construct()
     {
+        $nameUs = "";
+        $imgUs = "";
+        $admin = "false";
         // Si el usuario está autenticado, usar datos de la sesión
         if (Auth::check()) {
             $user = Auth::user();
@@ -44,7 +48,7 @@ class loginIcon extends Component
             }
         }else
         {
-            $circ = '<img src="/images/noLogin.png" alt="">';
+            $circ = '<img id="fotoImg" src="/images/noLogin.png" alt="">';
             $links = '<a href="/login">Login</a> <a href="/register">Sign</a>';
         }
         

@@ -3,10 +3,10 @@
 @section("title", "Ver Artículo")
 
 @section("seccioProva")
-    <h1>{{ $articulo->titol }}</h1>
-    <p><strong>Usuario:</strong> {{ $articulo->Usuari }}</p>
-    <p><strong>Cuerpo:</strong> {{ $articulo->cos }}</p>
-    <p><strong>QR:</strong> {{ $articulo->qr }}</p>
+    <h1>{{ $article->titol }}</h1>
+    <p><strong>Usuario:</strong> {{ $article->Usuari }}</p>
+    <p><strong>Cuerpo:</strong> {{ $article->cos }}</p>
+    <p><strong>QR:</strong> {{ $article->qr }}</p>
 
-    <a href="{{ route('articulos.index') }}">Volver a la lista</a>
+    <a href="{{ route('articles.index') }}">Volver a la lista</a>
 @endsection

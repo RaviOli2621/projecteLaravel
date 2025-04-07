@@ -5,6 +5,7 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Illuminate\Support\Facades\Auth;
 
 class navigationBar extends Component
 {
@@ -15,18 +16,16 @@ class navigationBar extends Component
      */
     public function __construct($name)
     {
-        if($name != "")
+        if (Auth::check()) 
         {
-            $links = '<a title="Meus Articles" href="projecte.test/vistaMeusArt.php">Tots</a>
-            <a title="Inserir articulo" href="<?php projecte.test/vistaIns.php">Inserir</a>
-            <a title="Editar articulos" href="<?php projecte.test/vistaEd.php">Editar</a>
-            <a title="Eliminar articulos" href="<?php projecte.test/vistaEl.php">Eliminar</a>';
+            $links = '<a title="Meus Articles" href="' . route('user.articles', Auth::id()) . '">Tots</a>
+            <a title="Inserir articulo" href="' . route('articles.create', Auth::id()) . '">Inserir</a>';
         }else
         {
-            $links = '<a title="Meus Articles" href="<?php projecte.test">Tots</a>
-            <a title="Inserir articulo" href="<?php projecte.test">Inserir</a>
-            <a title="Editar articulos" href="<?php projecte.test">Editar</a>
-            <a title="Eliminar articulos" href="<?php projecte.test">Eliminar</a>';
+            $links = '<a title="Meus Articles" href="login/">Tots</a>
+            <a title="Inserir articulo" href="login/">Inserir</a>
+            <a title="Editar articulos" href="login/">Editar</a>
+            <a title="Eliminar articulos" href="login/">Eliminar</a>';
         }
         $this->links = $links;
     }

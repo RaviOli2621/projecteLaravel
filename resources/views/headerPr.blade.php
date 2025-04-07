@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>@yield("title")</title>
-    <link href="{{ secure_asset('/css/header.css') }}" rel="stylesheet">
+    
+    <!-- Use external CSS file -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    
+    <!-- Only include critical variables -->
+    <style>
+        :root {
+            --green-color: #3a7563;
+            --dark-color: #1b4332;
+            --title-font: 'Arial, sans-serif';
+        }
+    </style>
 </head>
 <body>
     <nav>
-    <x-title-and-home tst="siu">Glossari de termes als jocs de lluita</x-title-and-home>
-    <x-login-icon nameUs="" admin="true"></x-login-icon>
-    
-    <!--<h1>Hola <?php echo($nom ?? "RaviOli2621") ?> (con la e para evitar inyeccion de codigo, como bladetruco)</h1>-->
-    <x-navigation-bar name="Xavi"></x-navigation-bar>
-@yield("seccioProva")
+        <x-navigation-bar name="Xavi"></x-navigation-bar>
+    </nav>
 
+    <main>
+        @yield("seccioProva")
+    </main>
 </body>
 </html>

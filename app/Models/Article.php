@@ -37,6 +37,10 @@ class Article extends Model
     {
         return self::find($id);
     }
+    public static function getByUserCorreu($id)
+    {
+        return self::where('Usuari', $id)->get();
+    }
     public static function getByContent($titol, $cos)
     {
         $cos = "%".$cos."%";

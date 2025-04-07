@@ -4,19 +4,17 @@
 
 @section("seccioProva")
     <h1>Crear un Nuevo Artículo</h1>
-    <form action="{{ route('articulos.store') }}" method="POST">
+    <form action="{{ route('articles.store') }}" method="POST">
         @csrf
-        <label>Usuario:</label>
-        <input type="text" name="Usuari" required>
-
         <label>Título:</label>
         <input type="text" name="titol" required>
+        
+        <input type="checkbox" name="copyTitol" id="copyTitol">
 
         <label>Cuerpo:</label>
         <textarea name="cos" required></textarea>
 
-        <label>QR (Opcional):</label>
-        <input type="text" name="qr">
+        <input type="checkbox" name="copyCos" id="copyCos">
 
         <button type="submit">Guardar</button>
     </form>

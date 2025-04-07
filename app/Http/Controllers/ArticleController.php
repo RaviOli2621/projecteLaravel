@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Article;
-
+use Illuminate\Support\Facades\Auth;
+ 
 class ArticleController extends Controller
 {
     // Obtener todos los artículos
     public function index()
     {
         $articles = Article::getAll();
-        return view('articles.pagination', ['articles' => $articles]);
+        return view('articles.pagination', ['articles' => $articles, "view" => "index"]);
+    }
+    public function userArticles(){
+        $userCorreu = Auth::user()->Correu;
+        $articles = Article::getByUserCorreu($userCorreu);
+        return view('articles.pagination', ['articles' => $articles, "view" => "user"]);
     }
 
     // Obtener un artículo por ID
@@ -19,21 +25,39 @@ class ArticleController extends Controller
     {
         $article = Article::getById($id);
         if ($article) {
-            return response()->json($article);
+            return view('articles.show', ['article' => $article]);
         }
         return response()->json(['message' => 'Article not found'], 404);
+    }
+
+    // Mostrar el formulario para crear un nuevo artículo
+    public function create()
+    {
+        return view('articles.create');
     }
 
     // Crear un nuevo artículo
     public function store(Request $request)
     {
+        $userCorreu = Auth::user()->Correu;
+
         $data = $request->validate([
-            'Usuari' => 'required|integer',
             'titol' => 'required|string|max:255',
             'cos' => 'required|string',
-            'qr' => 'nullable|string',
+            'copyTitol' => 'nullable|boolean',
+            'copyCos' => 'nullable|boolean',
         ]);
+        $data['Usuari'] = $userCorreu;
 
+        $data['qr'] = '';
+        if ($request->input('copyTitol')) {
+            $data['qr'] .= $data['titol'];
+        }
+        if ($request->input('copyCos')) {
+            $data['qr'] .= '|' . $data['cos'];
+        }
+        unset($data['copyTitol']);
+        unset($data['copyCos']);
         $article = Article::createArticulo($data);
         return response()->json($article, 201);
     }
@@ -61,4 +85,6 @@ class ArticleController extends Controller
         }
         return response()->json(['message' => 'Article not found'], 404);
     }
+
+    
 }
