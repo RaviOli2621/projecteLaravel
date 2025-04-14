@@ -4,21 +4,18 @@
 
 @section("seccioProva")
     <h1>Editar Artículo</h1>
-    <form action="{{ route('articulos.update', $articulo->ID) }}" method="POST">
+    <form action="{{ route('articles.update', $article->ID) }}" method="POST">
         @csrf
         @method('PUT')
 
-        <label>Usuario:</label>
-        <input type="text" name="Usuari" value="{{ $articulo->Usuari }}" required>
-
         <label>Título:</label>
-        <input type="text" name="titol" value="{{ $articulo->titol }}" required>
+        <input type="text" name="titol" value="{{ $article->titol }}" required>
 
         <label>Cuerpo:</label>
-        <textarea name="cos" required>{{ $articulo->cos }}</textarea>
+        <textarea name="cos" required>{{ $article->cos }}</textarea>
 
         <label>QR (Opcional):</label>
-        <input type="text" name="qr" value="{{ $articulo->qr }}">
+        <input type="text" name="qr" value="{{ $article->qr }}">
 
         <button type="submit">Actualizar</button>
     </form>

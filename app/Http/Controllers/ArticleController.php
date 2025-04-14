@@ -59,19 +59,48 @@ class ArticleController extends Controller
         unset($data['copyTitol']);
         unset($data['copyCos']);
         $article = Article::createArticulo($data);
-        return response()->json($article, 201);
+        return view('articles.show', ['article' => $article]);
     }
-
+    public function edit($id)
+    {
+        $article = Article::getById($id);
+        
+        if (!$article) {
+            return redirect()->route('articles.index')
+                ->with('error', 'Artículo no encontrado');
+        }
+        
+        // Verificar si el usuario es el propietario del artículo
+        if (Auth::user()->Correu !== $article->Usuari) {
+            return redirect()->route('articles.index')
+                ->with('error', 'No tienes permiso para editar este artículo');
+        }
+        
+        return view('articles.edit', ['article' => $article]);
+    }
     // Actualizar el título de un artículo
     public function update(Request $request, $id)
     {
         $data = $request->validate([
             'titol' => 'required|string|max:255',
+            'cos' => 'required|string|max:255',
+            'qr' => ['nullable', 'regex:/^(true|false)\|(true|false)$/'],
         ]);
+        // Get the article first to check ownership
+        $article = Article::getById($id);
+        if (!$article) {
+            return response()->json(['message' => 'Article not found'], 404);
+        }
 
-        $article = Article::updateTitulo($id, $data['titol']);
+        // Verify the current user is the owner of the article
+        if (Auth::user()->Correu !== $article->Usuari) {
+            return redirect()->route('articles.index')
+                ->with('error', 'No tienes permiso para modificar este artículo');
+        }
+        $data["usuari"] = $article->Usuari;
+        $article = Article::updateArticulo($id, $data);
         if ($article) {
-            return response()->json($article);
+            return view('articles.show', ['article' => $article]);
         }
         return response()->json(['message' => 'Article not found'], 404);
     }
@@ -81,7 +110,8 @@ class ArticleController extends Controller
     {
         $deleted = Article::deleteById($id);
         if ($deleted) {
-            return response()->json(['message' => 'Article deleted successfully']);
+            return redirect()->route('articles.index')
+                ->with('success', 'Artículo eliminado correctamente');
         }
         return response()->json(['message' => 'Article not found'], 404);
     }

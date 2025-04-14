@@ -69,7 +69,38 @@ class Article extends Model
         }
         return null;
     }
-
+    public static function updateCos($id, $nuevoCos)
+    {
+        $articulo = self::find($id);
+        if ($articulo) {
+            $articulo->cos = $nuevoCos;
+            $articulo->save();
+            return $articulo;
+        }
+        return null;
+    }
+    public static function updateQr($id, $nuevoQr)
+    {
+        $articulo = self::find($id);
+        if ($articulo) {
+            $articulo->qr = $nuevoQr;
+            $articulo->save();
+            return $articulo;
+        }
+        return null;
+    }
+    public static function updateArticulo($id, $data)
+    {
+        $articulo = self::find($id);
+        if ($articulo) {
+            $articulo->titol = $data['titol'];
+            $articulo->cos = $data['cos'];
+            $articulo->qr = $data['qr']?? '';
+            $articulo->save();
+            return $articulo;
+        }
+        return null;
+    }
     public static function deleteById($id)
     {
         return self::destroy($id);
