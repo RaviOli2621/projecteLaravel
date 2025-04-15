@@ -26,7 +26,10 @@ class UserController extends Controller
         }
         return response()->json(['message' => 'User not found'], 404);
     }
-
+    public function userAdminis(){
+        $users = User::all();
+        return view('user.admin', ['users' => $users]);
+    }
     // Crear un nuevo usuario
     public function store(Request $request)
     {
@@ -144,10 +147,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        if ($user) {
+        if ($user && $user->Admin == 0) {
             $user->delete();
-            return response()->json(['message' => 'User deleted successfully']);
+            return redirect()->back()->with('success', 'Usuario borrado correctamente');
         }
-        return response()->json(['message' => 'User not found'], 404);
+        return redirect()->back()->with('error', 'Usuario no encontrado/es administrador');
     }
 }

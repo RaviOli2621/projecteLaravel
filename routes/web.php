@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 Route::view("/",'home')->name("home"); 
 //Ruta articulos
 Route::resource('usuaris', UserController::class);
-
+Route::get('user/admin', [UserController::class, 'userAdminis'])->name('user.articles')->middleware('auth');
 
 Route::resource('articles', ArticleController::class);
 Route::get('user/articles', [ArticleController::class, 'userArticles'])->name('user.articles')->middleware('auth');

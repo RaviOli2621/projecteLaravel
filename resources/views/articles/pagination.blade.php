@@ -2,22 +2,46 @@
 @section("title", "Lista de Artículos")
 @section("seccioProva")
     <div class="articles-container">
+        <!-- HEADER -->
         <div class="articles-header">
             <h1>Lista de Artículos</h1>
+        </div>
+        <div class="articles-header">
             <div class="header-controls">
-                <div class="per-page-selector">
-                    <form action="{{ request()->url() }}" method="GET">
+                <form action="{{ request()->url() }}" method="GET" id="searchForm">
+                    <div class="search-box">
+                        <div class="search-input-container">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" name="search" placeholder="Buscar artículos..." 
+                                value="{{ request('search') }}" id="searchInput">
+                            <button type="button" class="clear-search" id="clearSearch" title="Limpiar búsqueda" @if(!request('search')) style="display:none" @endif>×</button>
+                        </div>
+                    </div>
+                    
+                    <div class="per-page-selector">
                         <label for="perPage">Mostrar:</label>
-                        <select name="perPage" id="perPage" onchange="this.form.submit()">
-                            @foreach([5, 10, 15, 25, 50] as $option)
+                        <select name="perPage" id="perPage">
+                            @foreach([1, 5, 10, 15, 25, 50] as $option)
                                 <option value="{{ $option }}" {{ $perPage == $option ? 'selected' : '' }}>{{ $option }}</option>
                             @endforeach
                         </select>
-                    </form>
-                </div>
-                @if($view === 'user') 
-                    <a href="{{ route('articles.create') }}" class="btn-create">Crear Nuevo Artículo</a>
-                @endif
+                    </div>
+                    
+                    <div class="sort-selector">
+                        <label for="sort">Ordenar por:</label>
+                        <select name="sort" id="sort">
+                            <option value="none" {{ request('sort', 'none') == 'none' ? 'selected' : '' }}>Predeterminado</option>
+                            <option value="titol_asc" {{ request('sort') == 'titol_asc' ? 'selected' : '' }}>Título (A-Z)</option>
+                            <option value="titol_desc" {{ request('sort') == 'titol_desc' ? 'selected' : '' }}>Título (Z-A)</option>
+                            <option value="cos_asc" {{ request('sort') == 'cos_asc' ? 'selected' : '' }}>Cuerpo (A-Z)</option>
+                            <option value="cos_desc" {{ request('sort') == 'cos_desc' ? 'selected' : '' }}>Cuerpo (Z-A)</option>
+                        </select>
+                    </div>
+                    
+                    @if($view === 'user') 
+                        <a href="{{ route('articles.create') }}" class="btn-create">Crear Nuevo Artículo</a>
+                    @endif
+                </form>
             </div>
         </div>
 
@@ -52,32 +76,5 @@
             {{ $articles->links() }}
         </div>
     </div>
-
-    <style>
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .per-page-selector {
-            display: flex;
-            align-items: center;
-        }
-        
-        .per-page-selector label {
-            margin-right: 8px;
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .per-page-selector select {
-            padding: 5px 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: white;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-    </style>
+    <script src="{{ asset('js/article-filters.js') }}"></script>
 @endsection

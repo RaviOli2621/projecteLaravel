@@ -8,29 +8,84 @@ use Illuminate\Support\Facades\Auth;
  
 class ArticleController extends Controller
 {
-    // Obtener todos los artículos
     public function index(Request $request)
     {
-        $perPage = $request->input('perPage', session('perPage', 10));
-        session(['perPage' => $perPage]); 
+        $perPage = $request->input('perPage', 10);
+        $search = $request->input('search', ''); 
+        $sort = $request->input('sort', 'none');
         
-        $articles = Article::getAll($perPage);
+        $query = Article::query();
+        
+        if (!empty($search)) {
+            $query->where('titol', 'LIKE', "%{$search}%");
+        }
+        
+        switch ($sort) {
+            case 'titol_asc':
+                $query->orderBy('titol', 'asc');
+                break;
+            case 'titol_desc':
+                $query->orderBy('titol', 'desc');
+                break;
+            case 'cos_asc':
+                $query->orderBy('cos', 'asc');
+                break;
+            case 'cos_desc':
+                $query->orderBy('cos', 'desc');
+                break;
+            default:
+                $query->orderBy('id', 'desc'); 
+        }
+        
+        $articles = $query->paginate($perPage)
+                        ->withQueryString(); 
+        
         return view('articles.pagination', [
-            'articles' => $articles, 
-            "view" => "index",
-            'perPage' => $perPage
+            'articles' => $articles,
+            'perPage' => $perPage,
+            'view' => 'public'
         ]);
     }
-    
-    public function userArticles(Request $request){
+
+    public function userArticles(Request $request)
+    {
         $perPage = $request->input('perPage', session('perPage', 10));
-        session(['perPage' => $perPage]); 
+        session(['perPage' => $perPage]);
         
+        $search = $request->input('search', '');
+        $sort = $request->input('sort', 'none');
         $userCorreu = Auth::user()->Correu;
-        $articles = Article::getByUserCorreu($userCorreu, $perPage);
+        
+        $query = Article::where('Usuari', $userCorreu);
+        
+        if (!empty($search)) {
+            $query->where('titol', 'LIKE', "%{$search}%");
+        }
+        
+        // Aplicar ordenación
+        switch ($sort) {
+            case 'titol_asc':
+                $query->orderBy('titol', 'asc');
+                break;
+            case 'titol_desc':
+                $query->orderBy('titol', 'desc');
+                break;
+            case 'cos_asc':
+                $query->orderBy('cos', 'asc');
+                break;
+            case 'cos_desc':
+                $query->orderBy('cos', 'desc');
+                break;
+            default:
+                $query->orderBy('id', 'desc');
+        }
+        
+        $articles = $query->paginate($perPage)
+                        ->withQueryString();
+        
         return view('articles.pagination', [
-            'articles' => $articles, 
-            "view" => "user",
+            'articles' => $articles,
+            'view' => 'user',
             'perPage' => $perPage
         ]);
     }

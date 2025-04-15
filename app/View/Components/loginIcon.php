@@ -44,7 +44,7 @@ class loginIcon extends Component
             
             if($admin == "true") 
             {
-                $links .= '<a href="/vistaAdmUsers.php">Administrar usuaris</a>';
+                $links .= '<a href="/user/admin">Administrar usuaris</a>';
             }
         }else
         {
