@@ -70,24 +70,38 @@ class AuthController extends Controller
     // Función para crear un nuevo usuario
     public function register(Request $request)
     {
-        // Validar los datos de entrada
-        $request->validate([
-            'email' => 'required|email|unique:usuaris,Correu', // Validar correo y asegurar que es único
-            'name' => 'required|string|min:3', // Validar el nombre de usuario
-            'password' => 'required|string|min:6|confirmed', // Validar la contraseña y su confirmación
-        ]);
+        try {
 
-        // Crear el nuevo usuario
-        DB::table('usuaris')->insert([
-            'Correu' => $request->email,
-            'Usuari' => $request->name,
-            'Contrasenya' => bcrypt($request->password),
-            'Admin' => False,
-            'google_id' => "",
-            'github_id' => ""
-        ]);
-        
-        // Aquí puedes devolver una respuesta JSON o redirigir al usuario
-        return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Puedes iniciar sesión ahora.');
+            $messages = [
+                'password.regex' => 'La contraseña debe contener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula, un número y un carácter especial (@$!%*?&)',
+                'password.min' => 'La contraseña debe tener al menos 8 caracteres',
+                'password.same' => 'Las contraseñas no coinciden',
+                'password.confirmed' => 'La confirmación de contraseña no coincide',
+                'email.unique' => 'Este correo electrónico ya está registrado',
+                'name.min' => 'El nombre de usuario debe tener al menos 3 caracteres',
+            ];
+            
+            // Validar los datos de entrada
+            $request->validate([
+                'email' => 'required|email|unique:usuaris,Correu',
+                'name' => 'required|string|min:3',
+                'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            ], $messages);
+
+            // Crear el nuevo usuario
+            DB::table('usuaris')->insert([
+                'Correu' => $request->email,
+                'Usuari' => $request->name,
+                'Contrasenya' => bcrypt($request->password),
+                'Admin' => False,
+                'google_id' => "",
+                'github_id' => ""
+            ]);
+            
+            // Aquí puedes devolver una respuesta JSON o redirigir al usuario
+            return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Puedes iniciar sesión ahora.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        }
     }
 }

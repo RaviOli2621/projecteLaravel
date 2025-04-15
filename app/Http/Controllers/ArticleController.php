@@ -9,15 +9,30 @@ use Illuminate\Support\Facades\Auth;
 class ArticleController extends Controller
 {
     // Obtener todos los artículos
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::getAll();
-        return view('articles.pagination', ['articles' => $articles, "view" => "index"]);
+        $perPage = $request->input('perPage', session('perPage', 10));
+        session(['perPage' => $perPage]); 
+        
+        $articles = Article::getAll($perPage);
+        return view('articles.pagination', [
+            'articles' => $articles, 
+            "view" => "index",
+            'perPage' => $perPage
+        ]);
     }
-    public function userArticles(){
+    
+    public function userArticles(Request $request){
+        $perPage = $request->input('perPage', session('perPage', 10));
+        session(['perPage' => $perPage]); 
+        
         $userCorreu = Auth::user()->Correu;
-        $articles = Article::getByUserCorreu($userCorreu);
-        return view('articles.pagination', ['articles' => $articles, "view" => "user"]);
+        $articles = Article::getByUserCorreu($userCorreu, $perPage);
+        return view('articles.pagination', [
+            'articles' => $articles, 
+            "view" => "user",
+            'perPage' => $perPage
+        ]);
     }
 
     // Obtener un artículo por ID

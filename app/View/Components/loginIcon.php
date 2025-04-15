@@ -39,7 +39,7 @@ class loginIcon extends Component
             }
             
             // Usar URL absolutas para evitar problemas de redirección
-            $links = '<a href="/vistaEdUsuari.php">Dades Usuari</a>
+            $links = '<a href="/usuaris/' . $user->Usuari . '/edit">Dades Usuari</a>
             <a href="/logout">Logout</a>';
             
             if($admin == "true") 

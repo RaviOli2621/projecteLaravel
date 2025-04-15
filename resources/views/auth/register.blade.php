@@ -1,6 +1,31 @@
+@extends("headerPr")
+
+@section("title", "Signin")
+
+@section("seccioProva")
 <form method="POST" action="{{ route('register') }}">
     @csrf
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
+    @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
+
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
     <!-- Campo para el nombre de usuario -->
     <label for="name">Nombre de usuario:</label>
     <input type="text" name="name" id="name" required>
@@ -20,3 +45,4 @@
     <!-- Botón de registro -->
     <button type="submit">Registrar</button>
 </form>
+@endsection

@@ -4,9 +4,21 @@
     <div class="articles-container">
         <div class="articles-header">
             <h1>Lista de Artículos</h1>
-            @if($view === 'user') 
-                <a href="{{ route('articles.create') }}" class="btn-create">Crear Nuevo Artículo</a>
-            @endif
+            <div class="header-controls">
+                <div class="per-page-selector">
+                    <form action="{{ request()->url() }}" method="GET">
+                        <label for="perPage">Mostrar:</label>
+                        <select name="perPage" id="perPage" onchange="this.form.submit()">
+                            @foreach([5, 10, 15, 25, 50] as $option)
+                                <option value="{{ $option }}" {{ $perPage == $option ? 'selected' : '' }}>{{ $option }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
+                @if($view === 'user') 
+                    <a href="{{ route('articles.create') }}" class="btn-create">Crear Nuevo Artículo</a>
+                @endif
+            </div>
         </div>
 
         @if(session('success'))
@@ -36,5 +48,36 @@
                 </div>
             @endforeach
         </div>
+        <div class="pagination-container">
+            {{ $articles->links() }}
+        </div>
     </div>
+
+    <style>
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .per-page-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .per-page-selector label {
+            margin-right: 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .per-page-selector select {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+    </style>
 @endsection

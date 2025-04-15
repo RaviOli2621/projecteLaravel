@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Services\PasswordService;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,45 @@ class User extends Authenticatable
     public $timestamps = true; // Si usas timestamps en la tabla
 
     // Obtener todos los usuarios
+    public static function updateUser($username, $data)
+    {
+        $updateData = [];
+        
+        // Si viene el nombre de usuario y es diferente al actual
+        if (isset($data['username']) && $data['username'] != $username) {
+            // Verificar si el nuevo nombre de usuario ya existe
+            $existingUser = DB::table('usuaris')->where('Usuari', $data['username'])->first();
+            if ($existingUser) {
+                throw new \Exception('El nombre de usuario ya está en uso');
+            }
+            $updateData['Usuari'] = $data['username'];
+        }
+        
+        // Si viene la contraseña
+        if (isset($data['password']) && !empty($data['password'])) {
+            $updateData['Contrasenya'] = bcrypt($data['password']);
+        }
+        
+        // Si viene la foto
+        if (isset($data['photo'])) {
+            $updateData['Foto'] = $data['photo'];
+        }
+        
+        // Solo actualizar si hay datos para actualizar
+        if (!empty($updateData)) {
+            try {
+                $updated = DB::table('usuaris')
+                    ->where('Usuari', $username)
+                    ->update($updateData);
+                return $updated;
+            } catch (\Exception $e) {
+                throw new \Exception('Error al actualizar la base de datos: ' . $e->getMessage());
+            }
+        }
+        
+        return false;
+    }
+
     public static function getAllUsers()
     {
         return self::all();

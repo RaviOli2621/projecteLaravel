@@ -11,6 +11,43 @@
     margin-bottom: 20px;
 }
 
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.per-page-selector {
+    display: flex;
+    align-items: center;
+}
+
+.per-page-selector label {
+    margin-right: 8px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.per-page-selector select {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.per-page-selector select:hover {
+    border-color: #aaa;
+}
+
+.per-page-selector select:focus {
+    outline: none;
+    border-color: var(--green-color, #3a7563);
+    box-shadow: 0 0 0 2px rgba(58, 117, 99, 0.2);
+}
+
 .btn-create {
     background-color: var(--green-color);
     color: white;
@@ -89,4 +126,162 @@
 .btn-view {
     background-color: #e7f3ff;
     color: #0366d6;
+}
+
+/* Pagnación */
+/* Paginación con elementos alineados */
+.pagination-container {
+    margin-top: 35px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* Pagination styles - alignment fix */
+.pagination {
+    display: flex;
+    align-items: stretch; /* Changed from center to stretch */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 40px;
+    background-color: white;
+    font-family: Arial, sans-serif;
+}
+
+.pagination li {
+    margin: 0;
+    border-right: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: stretch; /* Changed from center to stretch */
+    height: 100%;
+}
+
+.pagination li:last-child {
+    border-right: none;
+}
+
+.pagination li a,
+.pagination li span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 40px;
+    height: 100%;
+    text-decoration: none;
+    font-weight: 500;
+    color: #555;
+    transition: all 0.2s ease;
+    line-height: 1;
+    padding: 0 12px;
+}
+
+/* Estilos para la página activa */
+.pagination .active span {
+    background-color: var(--green-color, #3a7563);
+    color: white;
+    font-weight: bold;
+}
+
+/* Estilos para elementos deshabilitados */
+.pagination .disabled span {
+    color: #ccc;
+    background-color: #f9f9f9;
+    cursor: not-allowed;
+}
+
+/* Asegura que los SVG (flechas) se alinean correctamente */
+.pagination svg {
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    fill: currentColor;
+    position: relative;
+    top: 0; /* Asegura que no hay desplazamiento vertical */
+}
+
+.pagination .pagination-previous a,
+.pagination .pagination-next a {
+    font-weight: bold;
+    color: var(--green-color, #3a7563);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* Asegura que los textos y SVGs estén alineados */
+.pagination-previous span,
+.pagination-next span {
+    display: flex;
+    align-items: center;
+}
+
+.pagination li a:hover {
+    background-color: #f5f9f7;
+    color: var(--dark-color, #2c3e50);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.pagination li a:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(58, 117, 99, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+/* Estilos para las flechas de navegación */
+.pagination .pagination-previous a,
+.pagination .pagination-next a {
+    font-weight: bold;
+    color: var(--green-color, #3a7563);
+}
+
+/* Mejora para dispositivos móviles */
+@media (max-width: 480px) {
+    .pagination {
+        height: 38px;
+        font-size: 0.9rem;
+    }
+    
+    .pagination li a,
+    .pagination li span {
+        min-width: 35px;
+        padding: 0 8px;
+    }
+    
+    /* Ocultar texto en móviles, dejar solo iconos */
+    .pagination .pagination-previous span:not(.sr-only),
+    .pagination .pagination-next span:not(.sr-only) {
+        display: none;
+    }
+}
+
+/* Versión para pantallas muy pequeñas */
+@media (max-width: 350px) {
+    .pagination li:not(.pagination-previous):not(.pagination-next):not(.active) {
+        display: none;
+    }
+    
+    .pagination {
+        box-shadow: none;
+        background: transparent;
+    }
+    
+    .pagination li {
+        border: none;
+        margin: 0 5px;
+    }
+    
+    .pagination li a,
+    .pagination li span {
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 }

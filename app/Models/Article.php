@@ -28,19 +28,22 @@ class Article extends Model
     // Permitir la asignación masiva de estos campos
     protected $fillable = ['Usuari', 'titol', 'cos', 'qr'];
 
-    public static function getAll()
+    public static function getAll($perPage = 10)
     {
-        return self::all();
+        return self::paginate($perPage);
     }
 
     public static function getById($id)
     {
         return self::find($id);
     }
-    public static function getByUserCorreu($id)
+    
+    public static function getByUserCorreu($id, $perPage = 10)
     {
-        return self::where('Usuari', $id)->get();
+        $articles = self::where('Usuari', $id)->paginate($perPage);
+        return $articles;
     }
+    
     public static function getByContent($titol, $cos)
     {
         $cos = "%".$cos."%";
