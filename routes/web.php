@@ -36,5 +36,15 @@ Route::get('/dashboard', function () {
     return "Bienvenido al dashboard";
 })->middleware('auth'); // Ruta protegida por autenticación
 
-// Add this route to your web routes file
+// Ruta para mostrar el formulario de restablecimiento de contraseña
+Route::get('/forgot-password', [App\Http\Controllers\PasswordResetController::class, 'showForgotForm'])
+    ->name('password.forgot');
+Route::post('/forgot-password', [App\Http\Controllers\PasswordResetController::class, 'sendResetLink'])
+    ->name('password.email');
+Route::get('/reset-password/{token}', [App\Http\Controllers\PasswordResetController::class, 'showResetForm'])
+    ->name('password.reset.form');
+Route::post('/reset-password', [App\Http\Controllers\PasswordResetController::class, 'resetPassword'])
+    ->name('password.reset');
+
+
 ?>

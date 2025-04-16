@@ -1,6 +1,7 @@
 @extends("headerPr")
 
 @section("title", "Login")
+<link href="{{ asset('css/form.css') }}" rel="stylesheet">
 
 @push('scripts')
     <script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
@@ -61,20 +62,25 @@
 @if(session('success'))
     <div class="alert-success">{{ session('success') }}</div>
 @endif
+<div class="container">
+    <form method="POST" class="auth-form" action="{{ route('login') }}" id="login-form">
+        @csrf
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ Cookie::get('remembered_user_email') ?? old('email') }}" required>
+        <label>Contraseña:</label>
+        <input type="password" name="password" required>
+        <input type="checkbox" name="remember" id="remember" 
+        {{ old('remember') ? 'checked' : (Cookie::has('remembered_user_email') ? 'checked' : '') }}>
+        <label for="remember">Recordar sesión</label>
 
-<form method="POST" action="{{ route('login') }}" id="login-form">
-    @csrf
-    <label>Email:</label>
-    <input type="email" name="email" value="{{ Cookie::get('remembered_user_email') ?? old('email') }}" required>
-    <label>Contraseña:</label>
-    <input type="password" name="password" required>
-    <input type="checkbox" name="remember" id="remember" 
-    {{ old('remember') ? 'checked' : (Cookie::has('remembered_user_email') ? 'checked' : '') }}>
-    <label for="remember">Recordar sesión</label>
+        <div class="form-group">
+            <a href="{{ route('password.forgot') }}">¿Has olvidado tu contraseña?</a>
+        </div>
 
-    <!-- reCAPTCHA v3 (invisible) -->
-    <div class="g-recaptcha-info">Esta página está protegida por reCAPTCHA</div>
-    
-    <button type="submit">Iniciar sesión</button>
-</form>
+        <!-- reCAPTCHA v3 (invisible) -->
+        <div class="g-recaptcha-info">Esta página está protegida por reCAPTCHA</div>
+        
+        <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+    </form>
+</div>
 @endsection

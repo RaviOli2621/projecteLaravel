@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Services\PasswordService;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
@@ -115,13 +114,13 @@ class User extends Authenticatable
     public static function updatePassword($id, $newPassword)
     {
         $user = self::find($id);
+        $user = self::find($id);
         if ($user) {
-            $hashedPassword = PasswordService::encrypt($newPassword);
+            $hashedPassword = bcrypt($newPassword);
             $user->Contrasenya = $hashedPassword; // Usamos 'Contrasenya' para actualizar la contraseña
             $user->save();
             return $user;
         }
-        return null;
     }
 
     // Eliminar un usuario por ID
