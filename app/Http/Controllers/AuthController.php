@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -25,11 +27,41 @@ class AuthController extends Controller
             'password' => 'required|string|min:1',
         ]);
     
+        // Verificar reCAPTCHA si se envió el token
+        if ($request->has('g-recaptcha-response')) {
+            $recaptcha = $request->input('g-recaptcha-response');
+            $secretKey = env('RECAPTCHA_SECRET_KEY');
+            
+            // Validación mediante la API de Google con opción para ignorar SSL en desarrollo
+            $response = Http::withOptions([
+                'verify' => false, // Ignorar verificación SSL en desarrollo - NO USAR EN PRODUCCIÓN
+            ])->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => $secretKey,
+                'response' => $recaptcha,
+                'remoteip' => $request->ip()
+            ]);
+            
+            $result = $response->json();
+            
+            // Si la validación falla (no exitosa o score bajo)
+            if (!isset($result['success']) || !$result['success'] || (isset($result['score']) && $result['score'] < 0.5)) {
+                return back()->withErrors([
+                    'recaptcha' => 'La verificación de seguridad ha fallado. Por favor, inténtalo de nuevo.'
+                ])->withInput($request->except('password'));
+            }
+        }
+    
         // Buscar al usuario por correo electrónico (usando la columna Correu)
         $user = User::where('Correu', $credentials['email'])->first();
         
         if ($user && Hash::check($credentials['password'], $user->Contrasenya)) {
-            // Guardar datos relevantes del usuario en la sesión
+            // Si marcó "recordar", guardar email en cookie por 30 días
+            if ($request->has('remember')) {
+                Cookie::queue('remembered_user_email', $credentials['email'], 60*24*30);
+            }else{
+                Cookie::queue(Cookie::forget('remembered_user_email'));
+            }
+
             session([
                 'usuari' => $user->Usuari,  // Campo primario personalizado
                 'admin' => $user->Admin,
@@ -51,7 +83,7 @@ class AuthController extends Controller
     
         return back()->withErrors([
             'email' => 'Las credenciales no coinciden.',
-        ]);
+        ])->withInput($request->except('password'));
     }
 
     // Cerrar sesión

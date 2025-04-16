@@ -8,9 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <title>@yield("title")</title>
     
-    <!-- Use external CSS file -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    
     <!-- Only include critical variables -->
     <style>
         :root {
@@ -19,6 +17,8 @@
             --title-font: 'Arial, sans-serif';
         }
     </style>
+    <!-- Scripts stack para reCAPTCHA y otros scripts -->
+    @stack('scripts')
 </head>
 <body>
     <nav>

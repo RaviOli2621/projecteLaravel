@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Service;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;

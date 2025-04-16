@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Blade;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+
+// dd(Blade::getCustomDirectives());
 
 Route::view("/",'home')->name("home"); 
 //Ruta articulos
