@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class AuthController extends Controller
 {
@@ -134,6 +138,93 @@ class AuthController extends Controller
             return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Puedes iniciar sesión ahora.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->validator)->withInput();
+        }
+    }
+
+    //Oauth 
+    public function redirectToProvider($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    public function handleProviderCallback(Request $request, $provider)
+    {
+        try {
+            $socialUser = Socialite::driver($provider)->user();
+            $socialId = $socialUser->getId();
+            $email = $socialUser->getEmail();
+            $name = $socialUser->getName() ?? $socialUser->getNickname();
+            $providerField = $provider . '_id'; // google_id o github_id
+
+            // Buscar por ID del proveedor
+            $user = User::where($providerField, $socialId)->first();
+
+            if (!$user) {
+                // Buscar por correo electrónico
+                $user = User::where('Correu', $email)->first();
+
+                if ($user) {
+                    // Asociamos el login social a un usuario existente utilizando DB::table
+                    DB::table('usuaris')
+                        ->where('Usuari', $user->Usuari)
+                        ->update([
+                            $providerField => $socialId,
+                            // No se incluye updated_at aquí
+                        ]);
+                    
+                    // Refrescar la instancia del usuario con los datos actualizados
+                    $user = User::where('Usuari', $user->Usuari)->first();
+                } else {
+                    // Crear nuevo usuario siguiendo el patrón de la función register
+                    $uniqueUsername = $name . '_' . date('Ymd') . substr(uniqid(), -4);
+                    
+                    // Usar DB::table para ser consistente con la función register
+                    DB::table('usuaris')->insert([
+                        'Correu' => $email,
+                        'Usuari' => $uniqueUsername,
+                        'Contrasenya' => bcrypt(str()->random(0)), 
+                        $providerField => $socialId,
+                        'Foto' => null,
+                        'Admin' => False,
+                        'github_id' => $provider === 'github' ? $socialId : "",
+                        'google_id' => $provider === 'google' ? $socialId : "",
+                    ]);
+                    
+                    // Obtener el usuario recién creado
+                    $user = User::where('Correu', $email)->first();
+                    
+                    // Flash message para nuevo registro, similar a register()
+                    session()->flash('success', 'Cuenta creada exitosamente con ' . ucfirst($provider));
+                }
+            }
+
+            // Establecer las mismas variables de sesión que en login()
+            session([
+                'usuari' => $user->Usuari,
+                'admin' => $user->Admin,
+                'email' => $user->Correu,
+                'name' => $user->Usuari,
+            ]);
+            
+            // Configurar cookie para recordar al usuario (30 días)
+            Cookie::queue('remembered_user_email', $user->Correu, 60*24*30);
+            
+            // Realizar login sin "remember me", igual que en login()
+            Auth::login($user, false);
+            
+            // Migrar sesión preservando datos
+            $request->session()->migrate(true);
+            
+            // Guardar sesión explícitamente
+            session()->save();
+            
+            // Redireccionar a la misma ruta que login()
+            return redirect()->intended(route('home'));
+            
+        } catch (\Exception $e) {
+            // Manejo de errores consistente con las otras funciones
+            return redirect()->route('login')
+                ->withErrors(['oauth' => 'No se pudo autenticar con ' . ucfirst($provider) . '. Por favor intenta otra opción.']);
         }
     }
 }

@@ -82,5 +82,7 @@
         
         <button class="btn btn-primary" type="submit">Iniciar sesión</button>
     </form>
+    <a href="{{ url('auth/google') }}">Iniciar sesión con Google</a>
+    <a href="{{ url('auth/github') }}">Iniciar sesión con GitHub</a>
 </div>
 @endsection

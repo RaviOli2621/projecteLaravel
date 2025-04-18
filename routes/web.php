@@ -46,5 +46,8 @@ Route::get('/reset-password/{token}', [App\Http\Controllers\PasswordResetControl
 Route::post('/reset-password', [App\Http\Controllers\PasswordResetController::class, 'resetPassword'])
     ->name('password.reset');
 
+// Ruta para manejar la autenticación con Google y GitHub
+Route::get('auth/{provider}', [AuthController::class, 'redirectToProvider']);
+Route::get('auth/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 
 ?>
