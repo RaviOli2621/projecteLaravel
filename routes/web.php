@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Blade;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\ArticleApiController;
+use App\Http\Controllers\Api\UserApiController;
 
 // dd(Blade::getCustomDirectives());
 
@@ -57,4 +59,14 @@ Route::get('/articles/qrcode/{id}', [App\Http\Controllers\QrCodeController::clas
 Route::post('/articles/read-qrcode', [App\Http\Controllers\QrCodeController::class, 'readQrCode'])->name('articles.read-qrcode');
 
 // Rutas para manejar la api
+// Rutas de artículos (acceso público)
+Route::get('api/all', [ArticleApiController::class, 'all']);
+Route::get('api/titol', [ArticleApiController::class, 'titol']);
+Route::get('api/body', [ArticleApiController::class, 'body']);
+
+// Actualiza la ruta para usuarios:
+
+// Rutas de usuarios (requieren JWT y admin)
+Route::get('api/users', [App\Http\Controllers\Api\UserApiController::class, 'users'])
+    ->middleware(['auth', 'jwt.admin.session']);
 ?>

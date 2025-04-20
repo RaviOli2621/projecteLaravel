@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Storage;
-
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -82,6 +81,10 @@ class AuthController extends Controller
             // Guardar sesión explícitamente
             session()->save();
             
+            // Generar JWT y almacenarlo en la sesión
+            $token = JWTAuth::fromUser($user);
+            session(['jwt_token' => $token]);
+
             return redirect()->intended(route('home'));
         }
     
@@ -93,14 +96,15 @@ class AuthController extends Controller
     // Cerrar sesión
     public function logout(Request $request)
     {
-        // Cerrar la sesión del usuario
+        // Eliminar el JWT de la sesión
+        $request->session()->forget('jwt_token');
+        
+        // Proceso normal de logout
         Auth::logout();
-        // Invalidar la sesión actual
         $request->session()->invalidate();
-        // Regenerar el token CSRF
         $request->session()->regenerateToken();
-
-        return redirect()->intended(route('home'));
+        
+        return redirect('/');
     }
 
     // Función para crear un nuevo usuario
