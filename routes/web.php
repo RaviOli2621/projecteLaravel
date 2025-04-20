@@ -50,4 +50,11 @@ Route::post('/reset-password', [App\Http\Controllers\PasswordResetController::cl
 Route::get('auth/{provider}', [AuthController::class, 'redirectToProvider']);
 Route::get('auth/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 
+
+//Ruta para generar el código QR
+Route::get('/articles/qrcode/{id}', [App\Http\Controllers\QrCodeController::class, 'generateArticleQr'])
+    ->name('articles.qrcode');
+Route::post('/articles/read-qrcode', [App\Http\Controllers\QrCodeController::class, 'readQrCode'])->name('articles.read-qrcode');
+
+// Rutas para manejar la api
 ?>

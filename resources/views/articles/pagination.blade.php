@@ -68,6 +68,7 @@
                                     <button type="submit" class="btn btn-delete">Eliminar</button>
                                 </form>
                             @endif
+                            <button class="qr-code-btn btn btn-view" data-article-id="{{ $articulo->ID }}">Ver QR</button>
                         </div>
                 </div>
             @endforeach
@@ -76,5 +77,6 @@
             {{ $articles->links() }}
         </div>
     </div>
+
     <script src="{{ asset('js/article-filters.js') }}"></script>
 @endsection

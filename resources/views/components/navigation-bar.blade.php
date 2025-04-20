@@ -22,7 +22,7 @@
                 {!! $links !!}
             </div>
         </div>
-        
+        <button id="qr-upload-btn" class="dropbtn">Leer código QR</button>
         <!-- Replace custom login icon with component -->
         <x-login-icon></x-login-icon>
     </div>

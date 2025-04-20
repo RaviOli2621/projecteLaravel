@@ -19,6 +19,8 @@
     </style>
     <!-- Scripts stack para reCAPTCHA y otros scripts -->
     @stack('scripts')
+    <link href="{{ asset('css/qr-modal.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/qr-modal.js') }}"></script>
 </head>
 <body>
     <nav>
@@ -28,5 +30,7 @@
     <main>
         @yield("seccioProva")
     </main>
+    <x-qr-modal ></x-qr-modal>
+    <x-qr-upload-modal ></x-qr-upload-modal>
 </body>
 </html>
