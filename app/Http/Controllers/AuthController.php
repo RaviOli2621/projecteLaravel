@@ -222,6 +222,9 @@ class AuthController extends Controller
             // Guardar sesión explícitamente
             session()->save();
             
+            $token = JWTAuth::fromUser($user);
+            session(['jwt_token' => $token]);
+
             // Redireccionar a la misma ruta que login()
             return redirect()->intended(route('home'));
             
