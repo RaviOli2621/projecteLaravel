@@ -26,22 +26,18 @@ class PasswordResetController extends Controller
             'email.exists' => 'No encontramos ningún usuario con ese correo electrónico.'
         ]);
 
-        // Generar token aleatorio con timestamp incorporado
-        // Formato: timestamp_randomString
         $timestamp = Carbon::now()->timestamp;
         $randomStr = Str::random(40);
         $token = $timestamp . '_' . $randomStr;
         
         $email = $request->email;
 
-        // Guardar token en la base de datos (sin updated_at)
         DB::table('usuaris')
             ->where('Correu', $email)
             ->update([
                 'tokenRec' => $token
             ]);
 
-        // Enviar correo con enlace de restablecimiento
         $resetUrl = route('password.reset.form', ['token' => $token, 'email' => $email]);
         
         Mail::send('emails.reset-password', ['resetUrl' => $resetUrl], function($message) use ($email) {
@@ -57,7 +53,6 @@ class PasswordResetController extends Controller
         $token = $request->token;
         $email = $request->email;
         
-        // Verificar que el token es válido
         $user = DB::table('usuaris')
             ->where('Correu', $email)
             ->where('tokenRec', $token)
@@ -68,14 +63,12 @@ class PasswordResetController extends Controller
                 ->withErrors(['email' => 'El enlace no es válido o ha expirado.']);
         }
         
-        // Verificar si el token ha expirado (24 horas)
         if (strpos($token, '_') !== false) {
             list($timestamp, $randomStr) = explode('_', $token);
             $tokenCreationTime = Carbon::createFromTimestamp($timestamp);
             $expirationTime = Carbon::now()->subHours(24);
             
             if ($tokenCreationTime->lessThan($expirationTime)) {
-                // Limpiar el token expirado
                 DB::table('usuaris')
                     ->where('Correu', $email)
                     ->update(['tokenRec' => null]);
@@ -100,7 +93,6 @@ class PasswordResetController extends Controller
         $token = $request->token;
         $email = $request->email;
 
-        // Verificar que el token es válido
         $user = DB::table('usuaris')
             ->where('Correu', $email)
             ->where('tokenRec', $token)
@@ -110,14 +102,12 @@ class PasswordResetController extends Controller
             return back()->withErrors(['email' => 'El enlace no es válido o ha expirado.']);
         }
 
-        // Verificar si el token ha expirado (24 horas)
         if (strpos($token, '_') !== false) {
             list($timestamp, $randomStr) = explode('_', $token);
             $tokenCreationTime = Carbon::createFromTimestamp($timestamp);
             $expirationTime = Carbon::now()->subHours(24);
             
             if ($tokenCreationTime->lessThan($expirationTime)) {
-                // Limpiar el token expirado
                 DB::table('usuaris')
                     ->where('Correu', $email)
                     ->update(['tokenRec' => null]);
@@ -127,12 +117,11 @@ class PasswordResetController extends Controller
             }
         }
 
-        // Actualizar la contraseña
         DB::table('usuaris')
             ->where('Correu', $email)
             ->update([
                 'Contrasenya' => Hash::make($request->password),
-                'tokenRec' => null // Limpiar el token una vez usado
+                'tokenRec' => null 
             ]);
 
         return redirect()->route('login')->with('success', 'Tu contraseña ha sido restablecida correctamente. Ya puedes iniciar sesión.');

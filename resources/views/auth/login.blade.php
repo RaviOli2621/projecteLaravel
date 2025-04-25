@@ -43,46 +43,45 @@
 @endpush
 
 @section("seccioProva")
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-
-@if(session('success'))
-    <div class="alert-success">{{ session('success') }}</div>
-@endif
-<div class="container">
-    <form method="POST" class="auth-form" action="{{ route('login') }}" id="login-form">
-        @csrf
-        <label>Email:</label>
-        <input type="email" name="email" value="{{ Cookie::get('remembered_user_email') ?? old('email') }}" required>
-        <label>Contraseña:</label>
-        <input type="password" name="password" required>
-        <input type="checkbox" name="remember" id="remember" 
-        {{ old('remember') ? 'checked' : (Cookie::has('remembered_user_email') ? 'checked' : '') }}>
-        <label for="remember">Recordar sesión</label>
-
-        <div class="form-group">
-            <a href="{{ route('password.forgot') }}">¿Has olvidado tu contraseña?</a>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
+    @endif
 
-        <!-- reCAPTCHA v3 (invisible) -->
-        <div class="g-recaptcha-info">Esta página está protegida por reCAPTCHA</div>
-        
-        <button class="btn btn-primary" type="submit">Iniciar sesión</button>
-    </form>
-    <a href="{{ url('auth/google') }}">Iniciar sesión con Google</a>
-    <a href="{{ url('auth/github') }}">Iniciar sesión con GitHub</a>
-</div>
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="alert-success">{{ session('success') }}</div>
+    @endif
+    <div class="container">
+        <form method="POST" class="auth-form" action="{{ route('login') }}" id="login-form">
+            @csrf
+            <label>Email:</label>
+            <input type="email" name="email" value="{{ Cookie::get('remembered_user_email') ?? old('email') }}" required>
+            <label>Contraseña:</label>
+            <input type="password" name="password" required>
+            <input type="checkbox" name="remember" id="remember" 
+            {{ old('remember') ? 'checked' : (Cookie::has('remembered_user_email') ? 'checked' : '') }}>
+            <label for="remember">Recordar sesión</label>
+
+            <div class="form-group">
+                <a href="{{ route('password.forgot') }}">¿Has olvidado tu contraseña?</a>
+            </div>
+
+            <div class="g-recaptcha-info">Esta página está protegida por reCAPTCHA</div>
+            
+            <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+        </form>
+        <a href="{{ url('auth/google') }}">Iniciar sesión con Google</a>
+        <a href="{{ url('auth/github') }}">Iniciar sesión con GitHub</a>
+    </div>
 @endsection

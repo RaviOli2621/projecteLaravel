@@ -9,7 +9,7 @@
     <title>@yield("title")</title>
     
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <!-- Only include critical variables -->
+    <!-- Algunos colores -->
     <style>
         :root {
             --green-color: #3a7563;

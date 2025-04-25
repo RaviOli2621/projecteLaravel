@@ -7,10 +7,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\ArticleApiController;
 use App\Http\Controllers\Api\UserApiController;
+use App\Models\Article;
 
 // dd(Blade::getCustomDirectives());
 
-Route::view("/",'home')->name("home"); 
+// Route::view("/",'home')->name("home"); 
+Route::get("/",[ArticleController::class,'index'])->name("home"); 
 //Ruta articulos
 Route::resource('usuaris', UserController::class);
 Route::get('user/admin', [UserController::class, 'userAdminis'])->name('user.articles')->middleware('auth');

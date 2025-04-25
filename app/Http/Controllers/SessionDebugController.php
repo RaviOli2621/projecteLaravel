@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SessionDebugController extends Controller
 {
+    // Lo use para debuggar las sessiones cuando no funcionaban bien
     public function debug(Request $request)
     {
         return response()->json([
